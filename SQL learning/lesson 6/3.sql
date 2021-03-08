@@ -4,7 +4,7 @@ user_id,
 COUNT(`like`.post_id)+
 COUNT(`like`.message_id)) as likes
 FROM vk.`like`
-where 
+where
 	`like`.user_id = (SELECT `profile`.user_id FROM vk.`profile` order by birthday desc limit 0,1) or
 	`like`.user_id = (SELECT `profile`.user_id FROM vk.`profile` order by birthday desc limit 1,1) or
 	`like`.user_id = (SELECT `profile`.user_id FROM vk.`profile` order by birthday desc limit 2,1) or
