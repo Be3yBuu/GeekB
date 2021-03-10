@@ -1,4 +1,4 @@
-SELECT  
+select `profile`.firstname, `profile`.lastname, activity, `profile`.user_id from (SELECT  
 	Pro.user_id,
 	(
 	IF(Pos.posts is not NULL, Pos.posts, 0)+
@@ -40,4 +40,5 @@ LEFT JOIN (
     ) as Mes
 	ON Pro.user_id=Mes.from_user_id
 ORDER BY activity
-LIMIT 0,10
+LIMIT 0,10) as lowest
+left join `profile` on lowest.user_id = `profile`.user_id
