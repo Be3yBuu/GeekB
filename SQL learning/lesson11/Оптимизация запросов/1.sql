@@ -1,0 +1,35 @@
+CREATE TABLE IF NOT EXISTS `shop`.`logs` (
+  `userid` INT NULL,
+  `catalogid` INT NULL,
+  `productsid` INT NULL,
+  `datetime` DATETIME NOT NULL DEFAULT NOW())
+ENGINE = ARCHIVE;
+
+
+DROP TRIGGER IF EXISTS `shop`.`users_AFTER_INSERT`;
+DELIMITER $$
+USE `shop`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `users_AFTER_INSERT` AFTER INSERT ON `users` FOR EACH ROW BEGIN
+INSERT INTO `logs` (userid, catalogid, productsid) VALUES ((SELECT NEW.id), NULL, NULL);
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `shop`.`products_AFTER_INSERT`;
+DELIMITER $$
+USE `shop`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `shop`.`products_AFTER_INSERT` AFTER INSERT ON `products` FOR EACH ROW
+BEGIN
+INSERT INTO `logs` (userid, catalogid, productsid) VALUES (NULL, NULL, (SELECT NEW.id));
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `shop`.`catalogs_AFTER_INSERT`;
+
+DELIMITER $$
+USE `shop`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `shop`.`catalogs_AFTER_INSERT` AFTER INSERT ON `catalogs` FOR EACH ROW
+BEGIN
+INSERT INTO `logs` (userid, catalogid, productsid) VALUES (NULL, (SELECT NEW.id), NULL);
+END$$
+DELIMITER ;
+
